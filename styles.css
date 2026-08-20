@@ -1,0 +1,235 @@
+/* =====================================================================
+   TOKENS  —  change a value here and it updates everywhere it's used
+   ===================================================================== */
+:root{
+  --teal:#398378;         /* nav + page background            */
+  --teal-deep:#2d6b61;    /* hero / impact / join background  */
+  --icon-teal:#33776c;    /* default teal icon box            */
+  --icon-teal-2:#3e8c7e;
+  --lime:#8bc34a;         /* accent: underlines, bullets, borders */
+  --lime-deep:#6fa63a;
+  --lime-soft:#9fcf94;    /* impact icons                     */
+  --ink:#243a36;          /* card body text                   */
+  --muted:#5f6f6b;        /* card secondary text              */
+  --title:#35777d;        /* card headings                    */
+  --track:#e4eeda;        /* progress-bar track               */
+  --white-80:rgba(255,255,255,.82);
+  --white-55:rgba(255,255,255,.55);
+}
+
+
+/* =====================================================================
+   BASE / RESET
+   ===================================================================== */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:#fff;background:var(--teal);line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+svg{display:block}
+
+
+/* =====================================================================
+   SECTION: NAV  (#nav)
+   ===================================================================== */
+#nav{
+  position:sticky;top:0;z-index:50;background:var(--teal);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 26px;box-shadow:0 1px 0 rgba(0,0,0,.10);
+}
+#nav .nav-left{display:flex;align-items:center;gap:16px}
+#nav .burger{display:flex;flex-direction:column;gap:4px;cursor:pointer;background:none;border:0;padding:2px}
+#nav .burger span{width:18px;height:2px;background:#d3e4df;border-radius:2px}
+#nav .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px}
+
+/* SDG rainbow wheel logo */
+#nav .sdg{
+  width:20px;height:20px;border-radius:50%;position:relative;flex:none;
+  background:
+    conic-gradient(#e5243b 0 5.5%,#dda63a 5.5% 11%,#4c9f38 11% 16.6%,#c5192d 16.6% 22%,
+    #ff3a21 22% 27.7%,#26bde2 27.7% 33.3%,#fcc30b 33.3% 38.8%,#a21942 38.8% 44.4%,
+    #fd6925 44.4% 50%,#dd1367 50% 55.5%,#fd9d24 55.5% 61%,#bf8b2e 61% 66.6%,
+    #3f7e44 66.6% 72.2%,#0a97d9 72.2% 77.7%,#56c02b 77.7% 83.3%,#00689d 83.3% 88.8%,
+    #19486a 88.8% 94.4%,#e5243b 94.4% 100%);
+}
+#nav .sdg::after{content:"";position:absolute;inset:6px;background:var(--teal);border-radius:50%}
+
+#nav .nav-right{display:flex;align-items:center;gap:22px;font-size:13px}
+#nav .nav-item{display:flex;align-items:center;gap:7px;color:#dcebe7;cursor:pointer}
+#nav .nav-item:hover{color:#fff}
+#nav .bell{position:relative}
+#nav .badge{
+  position:absolute;top:-9px;right:-10px;background:#e5243b;color:#fff;
+  font-size:10px;font-weight:700;line-height:1;min-width:16px;height:16px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+}
+#nav .avatar{width:24px;height:24px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 50% 38%,#f0d6c4 0 34%,transparent 34%),
+             radial-gradient(circle at 50% 118%,#f0d6c4 0 46%,transparent 46%),#b9825f;}
+#nav .user{display:flex;align-items:center;gap:8px}
+
+
+/* =====================================================================
+   SECTION: HERO  (#hero)
+   ===================================================================== */
+#hero{background:var(--teal-deep);text-align:center;padding:58px 20px 74px}
+#hero h1{
+  font-size:44px;font-weight:800;letter-spacing:.4px;display:inline-block;
+  padding-bottom:9px;border-bottom:3px solid var(--lime);margin-bottom:22px;
+}
+#hero .lead{max-width:640px;margin:0 auto 40px;color:var(--white-80);font-size:15px;line-height:1.75}
+#hero .stats{display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
+#hero .stat{text-align:center;position:relative}
+#hero .stat .num{font-size:30px;font-weight:800}
+#hero .stat .lbl{font-size:12px;color:var(--white-55);margin-top:3px}
+#hero .stats .stat:not(:last-child)::after{
+  content:"";position:absolute;right:-30px;top:6px;bottom:14px;width:1px;background:rgba(255,255,255,.16);
+}
+
+
+/* =====================================================================
+   SECTION: PROGRAMS  (#programs)  —  wrapper + grid
+   ===================================================================== */
+#programs{background:var(--teal);padding:42px 20px 34px}
+#programs .grid{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:26px}
+
+
+/* ---------------------------------------------------------------------
+   CARD SHELL (shared)  —  layout common to all four cards.
+   Colors/borders that differ per card are in the CARD blocks below.
+   --------------------------------------------------------------------- */
+.card{
+  background:#fff;color:var(--ink);border-radius:14px;padding:22px 22px 20px;
+  box-shadow:0 16px 34px rgba(0,0,0,.20);display:flex;flex-direction:column;
+    min-height:460px;
+}
+.card .card-top{display:flex;justify-content:space-between;align-items:flex-start}
+.card .icon-box{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.card .frac{text-align:right}
+.card .frac .big{font-size:20px;font-weight:800;color:var(--ink)}
+.card .frac .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.card h3{
+  font-size:18px;margin:16px 0 6px;color:var(--title);font-weight:700;
+  padding-left:11px;border-left:3px solid var(--lime);line-height:1.25;
+}
+.card .desc{font-size:13px;color:var(--muted);margin:0 0 18px;padding-left:11px}
+.card .prog-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.card .prog-row b{color:var(--title);font-weight:700}
+.card .track{height:7px;background:var(--track);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.card .fill{height:100%;background:linear-gradient(90deg,#8bc34a,#5c9a4f);border-radius:6px}
+.card .feat{list-style:none;margin:0 0 20px;padding:0}
+.card .feat li{font-size:13px;color:#54635f;padding:3px 0 3px 16px;position:relative}
+.card .feat li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.card .btn-explore{
+  margin-top:auto;border:0;cursor:pointer;color:#fff;font-size:14px;font-weight:600;
+  padding:12px;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:filter .15s;
+}
+.card .btn-explore:hover{filter:brightness(1.06)}
+
+
+/* ---------------------------------------------------------------------
+   CARD 1  —  Global Youth Storytelling Archive
+   (left column: teal icon, teal button, green gradient border)
+   --------------------------------------------------------------------- */
+#card-1{
+  border:2px solid transparent;
+  background:
+    linear-gradient(#fff,#fff) padding-box,
+    linear-gradient(155deg,var(--lime),#3a8f6e) border-box;
+}
+#card-1 .icon-box{background:var(--icon-teal)}
+#card-1 .btn-explore{background:linear-gradient(90deg,#2e7a6e,#3e8c7e)}
+
+
+/* ---------------------------------------------------------------------
+   CARD 2  —  AI-Powered Cultural Heritage Platform
+   (right column: lime icon, lime button, no border)
+   --------------------------------------------------------------------- */
+#card-2 .icon-box{background:var(--lime)}
+#card-2 .btn-explore{background:linear-gradient(90deg,#7cb342,#9ccb5c)}
+
+
+/* ---------------------------------------------------------------------
+   CARD 3  —  International Sibling City Arts Exchange
+   (left column: teal→lime icon, teal→lime button, green gradient border)
+   --------------------------------------------------------------------- */
+#card-3{
+  border:2px solid transparent;
+  background:
+    linear-gradient(#fff,#fff) padding-box,
+    linear-gradient(155deg,var(--lime),#3a8f6e) border-box;
+}
+#card-3 .icon-box{background:linear-gradient(135deg,#2e7a6e,#7fb84c)}
+#card-3 .btn-explore{background:linear-gradient(90deg,#2e7a6e,#8bc34a)}
+
+
+/* ---------------------------------------------------------------------
+   CARD 4  —  Virtual Peace Museums Network
+   (right column: teal icon, teal button, no border)
+   --------------------------------------------------------------------- */
+#card-4 .icon-box{background:var(--icon-teal)}
+#card-4 .btn-explore{background:linear-gradient(90deg,#2e7a6e,#3e8c7e)}
+
+
+/* =====================================================================
+   SECTION: IMPACT  (#impact)
+   ===================================================================== */
+#impact{background:var(--teal-deep);text-align:center;padding:52px 20px 58px}
+#impact h2{
+  font-size:26px;font-weight:800;display:inline-block;padding-bottom:8px;
+  border-bottom:3px solid var(--lime);margin-bottom:40px;
+}
+#impact .impact-grid{display:flex;justify-content:center;gap:82px;flex-wrap:wrap}
+#impact .imp .ring{
+  width:54px;height:54px;border-radius:50%;margin:0 auto 14px;
+  background:rgba(159,207,148,.14);display:flex;align-items:center;justify-content:center;
+}
+#impact .imp .num{font-size:30px;font-weight:800}
+#impact .imp .lbl{font-size:12px;color:var(--white-55);margin-top:4px}
+
+
+/* =====================================================================
+   SECTION: JOIN  (#join)
+   ===================================================================== */
+#join{background:var(--teal-deep);padding:0 20px 70px}
+#join .join{
+  max-width:740px;margin:0 auto;text-align:center;border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;padding:44px 30px;
+}
+#join .join h2{
+  font-size:24px;font-weight:800;display:inline-block;padding-bottom:8px;
+  border-bottom:3px solid var(--lime);margin-bottom:20px;
+}
+#join .join p{max-width:520px;margin:0 auto 26px;color:var(--white-80);font-size:14px;line-height:1.75}
+#join .join-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+#join .btn{border:0;cursor:pointer;font-size:14px;font-weight:600;padding:11px 24px;border-radius:8px}
+#join .btn-primary{background:var(--lime);color:#fff}
+#join .btn-primary:hover{filter:brightness(1.06)}
+#join .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.4);color:#eaf3ef}
+#join .btn-ghost:hover{background:rgba(255,255,255,.08)}
+
+
+/* =====================================================================
+   FLOATING: "Made with Manus" badge
+   ===================================================================== */
+.made{
+  position:fixed;right:18px;bottom:16px;z-index:60;background:#161616;color:#f4efe6;
+  font-size:12px;padding:7px 13px 7px 10px;border-radius:20px;display:flex;align-items:center;gap:7px;
+  box-shadow:0 6px 16px rgba(0,0,0,.32);
+}
+
+
+/* =====================================================================
+   RESPONSIVE  (mobile ≤ 760px)
+   ===================================================================== */
+@media(max-width:760px){
+  #programs .grid{grid-template-columns:1fr}
+  #nav .nav-right{gap:14px}
+  #nav .nav-item.apps .txt{display:none}
+  #hero h1{font-size:32px}
+  #hero .stats{gap:34px}
+  #hero .stats .stat:not(:last-child)::after{display:none}
+  #impact .impact-grid{gap:44px}
+}
