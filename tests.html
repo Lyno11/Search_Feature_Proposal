@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>issNOW.earth — Test Runner</title>
+<style>
+  :root{--ok:#2e7d32;--bad:#c62828;--ink:#1f2a28;--muted:#6b7c78;--line:#e3e9e6}
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+       margin:0;background:#f5f8f6;color:var(--ink);line-height:1.5}
+  header{background:#2d6b61;color:#fff;padding:22px 26px}
+  header h1{margin:0;font-size:20px}
+  header p{margin:4px 0 0;font-size:13px;color:rgba(255,255,255,.8)}
+  main{max-width:820px;margin:24px auto;padding:0 20px}
+  #summary{font-size:16px;font-weight:700;padding:14px 16px;border-radius:10px;margin-bottom:18px}
+  #summary.ok{background:#e6f4ea;color:var(--ok);border:1px solid #bfe3c9}
+  #summary.bad{background:#fdecea;color:var(--bad);border:1px solid #f5c6c2}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 14px;font-size:14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f0f4f2;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  tr:last-child td{border-bottom:0}
+  .tag{font-weight:700;font-size:12px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+  .tag.pass{background:#e6f4ea;color:var(--ok)}
+  .tag.fail{background:#fdecea;color:var(--bad)}
+  .detail{color:var(--bad);font-size:12px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .group{margin:22px 0 8px;font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  footer{max-width:820px;margin:16px auto 40px;padding:0 20px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+  <header>
+    <h1>issNOW.earth — Search &amp; Render Tests</h1>
+    <p>Runs the same assertions as <code>app.test.js</code>, in the browser, against the live <code>app.js</code>.</p>
+  </header>
+
+  <main>
+    <div id="summary">Running…</div>
+    <div id="report"></div>
+  </main>
+  <footer>Open this file alongside <code>app.js</code>. If the grid below the report looks empty, that's expected — it's the hidden scratch DOM the tests need.</footer>
+
+  <!-- Hidden scratch DOM: app.js's wiring binds to these IDs on load. -->
+  <div style="display:none" aria-hidden="true">
+    <input id="article-search" type="search">
+    <button id="search-clear"></button>
+    <div id="results"></div>
+    <p id="empty"></p>
+    <p id="search-count"></p>
+  </div>
+
+  <!-- Load the app under test (top-level consts/functions are visible to the next script). -->
+  <script src="app.js"></script>
+
+  <!-- The tests. -->
+  <script>
+  (function () {
+    // ---- harness ----
+    const rows = [];            // {group, name, ok, detail}
+    let group = "general";
+    let passed = 0, failed = 0;
+    function G(name){ group = name; }
+    function check(name, cond, detail){
+      const ok = !!cond; ok ? passed++ : failed++;
+      rows.push({ group, name, ok, detail: ok ? "" : (detail || "") });
+    }
+    function eq(name, got, want){
+      const g = JSON.stringify(got), w = JSON.stringify(want);
+      check(name, g === w, `got ${g}, wanted ${w}`);
+    }
+    const titles = q => searchArticles(q, ARTICLES).map(a => a.title);
+
+    // ================= 1. searchArticles =================
+    G("Search — matching & ranking");
+    eq("exact single match", titles("heritage"), ["AI-Powered Cultural Heritage Platform"]);
+    eq("multi-word: city arts", titles("city arts"), ["International Sibling City Arts Exchange"]);
+    eq("multi-word: youth stories", titles("youth stories"), ["Global Youth Storytelling Archive"]);
+    eq("single-word: peace", titles("peace"), ["Virtual Peace Museums Network"]);
+    eq("ranking: title weight wins", titles("global"),
+       ["Global Youth Storytelling Archive","International Sibling City Arts Exchange","Virtual Peace Museums Network"]);
+    eq("stable tie-break order", titles("cultural"),
+       ["AI-Powered Cultural Heritage Platform","International Sibling City Arts Exchange","Virtual Peace Museums Network"]);
+    eq("empty query returns all in order", titles(""),
+       ["Global Youth Storytelling Archive","AI-Powered Cultural Heritage Platform","International Sibling City Arts Exchange","Virtual Peace Museums Network"]);
+    eq("whitespace-only query returns all", titles("   ").length, 4);
+    eq("no match returns empty", titles("quantum"), []);
+    eq("case-insensitive", titles("HERITAGE"), ["AI-Powered Cultural Heritage Platform"]);
+    eq("accent-insensitive (heri\u0308tage)", titles("her\u00EFtage"), ["AI-Powered Cultural Heritage Platform"]);
+    eq("typo not matched (fuzzy TODO)", titles("hertage"), []);
+    check("regex metachars don't throw: '('", (()=>{try{searchArticles("(",ARTICLES);return true}catch(e){return false}})());
+    check("regex metachars don't throw: 'c++'", (()=>{try{searchArticles("c++",ARTICLES);return true}catch(e){return false}})());
+    check("does not mutate ARTICLES order", ARTICLES[0].id==="youth-storytelling" && ARTICLES[3].id==="peace-museums");
+
+    // ================= 2. norm =================
+    G("norm — normalization");
+    eq("norm lowercases", norm("HeLLo"), "hello");
+    eq("norm strips accents", norm("Caf\u00E9"), "cafe");
+
+    // ================= 3. escapeHTML =================
+    G("escapeHTML — output safety");
+    eq("escape < > &", escapeHTML('<a> & "b"'), "&lt;a&gt; &amp; &quot;b&quot;");
+    eq("escape leaves plain text", escapeHTML("Peace Museums"), "Peace Museums");
+
+    // ================= 4. highlight =================
+    G("highlight — wrapping & escaping");
+    eq("highlight wraps the term", highlight("Cultural Heritage", ["heritage"]), "Cultural <mark>Heritage</mark>");
+    eq("highlight is case-insensitive", highlight("HERITAGE site", ["heritage"]), "<mark>HERITAGE</mark> site");
+    eq("highlight escapes HTML in source first", highlight("<b>hi</b>", []), "&lt;b&gt;hi&lt;/b&gt;");
+    check("highlight w/ metachar term doesn't throw", (()=>{try{highlight("a+b",["+"]);return true}catch(e){return false}})());
+    check("no term -> no <mark>", highlight("plain text", []).indexOf("<mark>") === -1);
+
+    // ================= 5. XSS via query path =================
+    G("Security — injection through the query");
+    (function(){
+      const q = '<img src=x onerror=alert(1)>';
+      const terms = norm(q).trim().split(/\s+/).filter(Boolean);
+      const html = searchArticles(q, ARTICLES).map(a => cardHTML(a, terms)).join("");
+      check("malicious query yields no cards", searchArticles(q, ARTICLES).length === 0);
+      check("no raw <img in rendered output", html.indexOf("<img") === -1);
+      check("no raw onerror= in rendered output", html.indexOf("onerror=") === -1);
+    })();
+
+    // ================= 6. Data integrity & rendering =================
+    G("Data & rendering");
+    eq("four articles present", ARTICLES.length, 4);
+    check("every article has a unique id", new Set(ARTICLES.map(a=>a.id)).size === ARTICLES.length);
+    check("every icon key exists in ICONS", ARTICLES.every(a => typeof ICONS[a.icon]==="string" && ICONS[a.icon].length>0), "an article references a missing icon");
+    check("every theme is valid", ARTICLES.every(a => ["teal","lime","grad"].includes(a.theme)), "an article has an unknown theme");
+    check("progress is 0..100", ARTICLES.every(a => typeof a.progress==="number" && a.progress>=0 && a.progress<=100));
+    (function(){
+      const a = ARTICLES[0], html = cardHTML(a, []);
+      check("cardHTML applies theme class", html.includes("theme-"+a.theme));
+      check("cardHTML adds .bordered when border=true", a.border ? html.includes("bordered") : true);
+      check("cardHTML sets progress width", html.includes("width:"+a.progress+"%"));
+      check("cardHTML includes the title", html.includes(a.title));
+    })();
+    check("card-2 not bordered", cardHTML(ARTICLES[1], []).includes("bordered") === false);
+
+    // ---- render report ----
+    const summary = document.getElementById("summary");
+    summary.className = failed ? "bad" : "ok";
+    summary.textContent = `${passed} passed, ${failed} failed  (${passed+failed} total)` + (failed ? "" : "  ✓");
+
+    const report = document.getElementById("report");
+    let html = "", current = null;
+    for (const r of rows){
+      if (r.group !== current){ current = r.group; html += `<div class="group">${r.group}</div><table><tbody>`; }
+      html += `<tr><td style="width:64px"><span class="tag ${r.ok?'pass':'fail'}">${r.ok?'PASS':'FAIL'}</span></td>`
+            + `<td>${r.name}${r.detail?`<div class="detail">${r.detail.replace(/</g,'&lt;')}</div>`:""}</td></tr>`;
+      // close table before the next group starts
+      const idx = rows.indexOf(r);
+      if (idx === rows.length-1 || rows[idx+1].group !== current) html += `</tbody></table>`;
+    }
+    report.innerHTML = html;
+    document.title = (failed ? "✗ " : "✓ ") + `${passed}/${passed+failed} — issNOW.earth tests`;
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Beyond SDGs — issNOW.earth Platform</title>
+  <style>
+/* =====================================================================
+   - Global palette:   EDIT the :root tokens below.
+   - A whole section:  jump to its "SECTION:" block.
+   - A card's LOOK:    jump to "CARD THEMES" (teal / lime / grad / border).
+   - A card's CONTENT: edit its entry in app.js (title, tags, theme…).
+   ===================================================================== */
+
+/* ============ TOKENS ============ */
+:root{
+  --teal:#398378;         /* nav + page background            */
+  --teal-deep:#2d6b61;    /* hero / impact / join background  */
+  --icon-teal:#33776c;    /* teal icon box                    */
+  --lime:#8bc34a;         /* accent: underlines, bullets, borders */
+  --lime-deep:#6fa63a;
+  --lime-soft:#9fcf94;    /* impact icons                     */
+  --ink:#243a36;          /* card body text                   */
+  --muted:#5f6f6b;        /* card secondary text              */
+  --title:#35777d;        /* card headings                    */
+  --track:#e4eeda;        /* progress-bar track               */
+  --white-80:rgba(255,255,255,.82);
+  --white-55:rgba(255,255,255,.55);
+}
+
+/* ============ BASE / RESET ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:#fff;background:var(--teal);line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+svg{display:block}
+
+/* ============ SECTION: NAV (#nav) ============ */
+#nav{
+  position:sticky;top:0;z-index:50;background:var(--teal);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 26px;box-shadow:0 1px 0 rgba(0,0,0,.10);
+}
+#nav .nav-left{display:flex;align-items:center;gap:16px}
+#nav .burger{display:flex;flex-direction:column;gap:4px;cursor:pointer;background:none;border:0;padding:2px}
+#nav .burger span{width:18px;height:2px;background:#d3e4df;border-radius:2px}
+#nav .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px}
+#nav .sdg{
+  width:20px;height:20px;border-radius:50%;position:relative;flex:none;
+  background:
+    conic-gradient(#e5243b 0 5.5%,#dda63a 5.5% 11%,#4c9f38 11% 16.6%,#c5192d 16.6% 22%,
+    #ff3a21 22% 27.7%,#26bde2 27.7% 33.3%,#fcc30b 33.3% 38.8%,#a21942 38.8% 44.4%,
+    #fd6925 44.4% 50%,#dd1367 50% 55.5%,#fd9d24 55.5% 61%,#bf8b2e 61% 66.6%,
+    #3f7e44 66.6% 72.2%,#0a97d9 72.2% 77.7%,#56c02b 77.7% 83.3%,#00689d 83.3% 88.8%,
+    #19486a 88.8% 94.4%,#e5243b 94.4% 100%);
+}
+#nav .sdg::after{content:"";position:absolute;inset:6px;background:var(--teal);border-radius:50%}
+#nav .nav-right{display:flex;align-items:center;gap:22px;font-size:13px}
+#nav .nav-item{display:flex;align-items:center;gap:7px;color:#dcebe7;cursor:pointer}
+#nav .nav-item:hover{color:#fff}
+#nav .bell{position:relative}
+#nav .badge{
+  position:absolute;top:-9px;right:-10px;background:#e5243b;color:#fff;
+  font-size:10px;font-weight:700;line-height:1;min-width:16px;height:16px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+}
+#nav .avatar{width:24px;height:24px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 50% 38%,#f0d6c4 0 34%,transparent 34%),
+             radial-gradient(circle at 50% 118%,#f0d6c4 0 46%,transparent 46%),#b9825f;}
+#nav .user{display:flex;align-items:center;gap:8px}
+
+/* ============ SECTION: HERO (#hero) ============ */
+#hero{background:var(--teal-deep);text-align:center;padding:58px 20px 74px}
+#hero h1{
+  font-size:44px;font-weight:800;letter-spacing:.4px;display:inline-block;
+  padding-bottom:9px;border-bottom:3px solid var(--lime);margin-bottom:22px;
+}
+#hero .lead{max-width:640px;margin:0 auto 40px;color:var(--white-80);font-size:15px;line-height:1.75}
+#hero .stats{display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
+#hero .stat{text-align:center;position:relative}
+#hero .stat .num{font-size:30px;font-weight:800}
+#hero .stat .lbl{font-size:12px;color:var(--white-55);margin-top:3px}
+#hero .stats .stat:not(:last-child)::after{
+  content:"";position:absolute;right:-30px;top:6px;bottom:14px;width:1px;background:rgba(255,255,255,.16);
+}
+
+/* ============ SECTION: PROGRAMS (#programs) — search + grid ============ */
+#programs{background:var(--teal);padding:34px 20px 34px}
+
+/* --- Search bar --- */
+#programs .search-bar{
+  max-width:560px;margin:0 auto 8px;position:relative;
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:26px;padding:0 14px;transition:border-color .15s, background .15s;
+}
+#programs .search-bar:focus-within{background:rgba(255,255,255,.16);border-color:var(--lime)}
+#programs .search-ico{display:flex;color:var(--lime-soft);margin-right:8px}
+#programs .search-bar input{
+  flex:1;background:none;border:0;outline:none;color:#fff;font-size:14px;padding:12px 0;
+}
+#programs .search-bar input::placeholder{color:rgba(255,255,255,.55)}
+#programs .search-bar input::-webkit-search-cancel-button{-webkit-appearance:none}
+#programs .search-clear{
+  background:none;border:0;cursor:pointer;color:rgba(255,255,255,.7);
+  font-size:20px;line-height:1;padding:2px 4px;
+}
+#programs .search-clear:hover{color:#fff}
+#programs .search-count{
+  max-width:960px;margin:0 auto 20px;text-align:center;
+  color:var(--white-55);font-size:12px;min-height:16px;
+}
+
+/* --- Grid + empty state --- */
+#programs .grid{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:26px}
+#programs .empty{
+  max-width:960px;margin:10px auto 0;text-align:center;
+  color:var(--white-80);font-size:15px;padding:30px 0;
+}
+
+/* ---- CARD SHELL (shared) — layout common to every card ---- */
+.card{
+  background:#fff;color:var(--ink);border-radius:14px;padding:22px 22px 20px;
+  box-shadow:0 16px 34px rgba(0,0,0,.20);display:flex;flex-direction:column;
+}
+.card .card-top{display:flex;justify-content:space-between;align-items:flex-start}
+.card .icon-box{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.card .frac{text-align:right}
+.card .frac .big{font-size:20px;font-weight:800;color:var(--ink)}
+.card .frac .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.card h3{
+  font-size:18px;margin:16px 0 6px;color:var(--title);font-weight:700;
+  padding-left:11px;border-left:3px solid var(--lime);line-height:1.25;
+}
+.card .desc{font-size:13px;color:var(--muted);margin:0 0 18px;padding-left:11px}
+.card .prog-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.card .prog-row b{color:var(--title);font-weight:700}
+.card .track{height:7px;background:var(--track);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.card .fill{height:100%;background:linear-gradient(90deg,#8bc34a,#5c9a4f);border-radius:6px}
+.card .feat{list-style:none;margin:0 0 20px;padding:0}
+.card .feat li{font-size:13px;color:#54635f;padding:3px 0 3px 16px;position:relative}
+.card .feat li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.card .btn-explore{
+  margin-top:auto;border:0;cursor:pointer;color:#fff;font-size:14px;font-weight:600;
+  padding:12px;border-radius:8px;text-decoration:none;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s;
+}
+.card .btn-explore:hover{filter:brightness(1.06)}
+/* highlighted search matches */
+.card mark{background:rgba(139,195,74,.32);color:inherit;border-radius:3px;padding:0 1px}
+
+/* ---- CARD THEMES — set per card via its `theme` in app.js ----
+     theme-teal  · teal icon + teal button
+     theme-lime  · lime icon + lime button
+     theme-grad  · teal->lime icon + teal->lime button
+     .bordered   · adds the green gradient edge (left-column look)   */
+.card.theme-teal .icon-box{background:var(--icon-teal)}
+.card.theme-teal .btn-explore{background:linear-gradient(90deg,#2e7a6e,#3e8c7e)}
+
+.card.theme-lime .icon-box{background:var(--lime)}
+.card.theme-lime .btn-explore{background:linear-gradient(90deg,#7cb342,#9ccb5c)}
+
+.card.theme-grad .icon-box{background:linear-gradient(135deg,#2e7a6e,#7fb84c)}
+.card.theme-grad .btn-explore{background:linear-gradient(90deg,#2e7a6e,#8bc34a)}
+
+.card.bordered{
+  border:2px solid transparent;
+  background:
+    linear-gradient(#fff,#fff) padding-box,
+    linear-gradient(155deg,var(--lime),#3a8f6e) border-box;
+}
+
+/* ============ SECTION: IMPACT (#impact) ============ */
+#impact{background:var(--teal-deep);text-align:center;padding:52px 20px 58px}
+#impact h2{
+  font-size:26px;font-weight:800;display:inline-block;padding-bottom:8px;
+  border-bottom:3px solid var(--lime);margin-bottom:40px;
+}
+#impact .impact-grid{display:flex;justify-content:center;gap:82px;flex-wrap:wrap}
+#impact .imp .ring{
+  width:54px;height:54px;border-radius:50%;margin:0 auto 14px;
+  background:rgba(159,207,148,.14);display:flex;align-items:center;justify-content:center;
+}
+#impact .imp .num{font-size:30px;font-weight:800}
+#impact .imp .lbl{font-size:12px;color:var(--white-55);margin-top:4px}
+
+/* ============ SECTION: JOIN (#join) ============ */
+#join{background:var(--teal-deep);padding:0 20px 70px}
+#join .join{
+  max-width:740px;margin:0 auto;text-align:center;border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;padding:44px 30px;
+}
+#join .join h2{
+  font-size:24px;font-weight:800;display:inline-block;padding-bottom:8px;
+  border-bottom:3px solid var(--lime);margin-bottom:20px;
+}
+#join .join p{max-width:520px;margin:0 auto 26px;color:var(--white-80);font-size:14px;line-height:1.75}
+#join .join-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+#join .btn{border:0;cursor:pointer;font-size:14px;font-weight:600;padding:11px 24px;border-radius:8px}
+#join .btn-primary{background:var(--lime);color:#fff}
+#join .btn-primary:hover{filter:brightness(1.06)}
+#join .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.4);color:#eaf3ef}
+#join .btn-ghost:hover{background:rgba(255,255,255,.08)}
+
+/* ============ FLOATING: "Made with Manus" badge ============ */
+.made{
+  position:fixed;right:18px;bottom:16px;z-index:60;background:#161616;color:#f4efe6;
+  font-size:12px;padding:7px 13px 7px 10px;border-radius:20px;display:flex;align-items:center;gap:7px;
+  box-shadow:0 6px 16px rgba(0,0,0,.32);
+}
+
+/* ============ RESPONSIVE (mobile <= 760px) ============ */
+@media(max-width:760px){
+  #programs .grid{grid-template-columns:1fr}
+  #nav .nav-right{gap:14px}
+  #nav .nav-item.apps .txt{display:none}
+  #hero h1{font-size:32px}
+  #hero .stats{gap:34px}
+  #hero .stats .stat:not(:last-child)::after{display:none}
+  #impact .impact-grid{gap:44px}
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav" id="nav">
+    <div class="nav-left">
+      <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="brand"><span class="sdg"></span> issNOW.earth Platform</div>
+    </div>
+    <nav class="nav-right">
+      <div class="nav-item apps">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dcebe7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/></svg>
+        <span class="txt">My Applications</span>
+      </div>
+      <div class="nav-item bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dcebe7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="badge">7</span>
+      </div>
+      <div class="nav-item user"><span class="avatar"></span> lynochihwehwete</div>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <h1>Innovation Beyond SDGs</h1>
+    <p class="lead">Flagship initiatives extending beyond the UN Sustainable Development Goals, focusing on Arts and Culture as tools for diplomacy and global understanding</p>
+    <div class="stats">
+      <div class="stat"><div class="num">4</div><div class="lbl">Flagship Programs</div></div>
+      <div class="stat"><div class="num">190+</div><div class="lbl">Countries Reached</div></div>
+      <div class="stat"><div class="num">2030</div><div class="lbl">Target Year</div></div>
+    </div>
+  </section>
+
+  <!-- Programs -->
+  <section class="programs" id="programs">
+
+    <!-- Search -->
+    <div class="search-bar">
+      <span class="search-ico" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </span>
+      <input type="search" id="article-search" placeholder="Search programs by name, focus, or feature…"
+             aria-label="Search programs" autocomplete="off">
+      <button type="button" id="search-clear" class="search-clear" aria-label="Clear search" hidden>&times;</button>
+    </div>
+    <p class="search-count" id="search-count" aria-live="polite"></p>
+
+    <!-- Results (rendered by app.js) -->
+    <div class="grid" id="results"></div>
+
+    <!-- Empty state -->
+    <p class="empty" id="empty" hidden>No programs match your search. Try a different keyword.</p>
+
+  </section>
+
+  <!-- Impact -->
+  <section class="impact" id="impact">
+    <h2>Our Impact Through Arts &amp; Culture Diplomacy</h2>
+    <div class="impact-grid">
+      <div class="imp">
+        <div class="ring">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9fcf94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="num">2.4M+</div><div class="lbl">Global Participants</div>
+      </div>
+      <div class="imp">
+        <div class="ring">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9fcf94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="#9fcf94"/></svg>
+        </div>
+        <div class="num">46K+</div><div class="lbl">Cultural Artifacts</div>
+      </div>
+      <div class="imp">
+        <div class="ring">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9fcf94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
+        </div>
+        <div class="num">25%</div><div class="lbl">Annual Growth</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Join -->
+  <section class="join-wrap" id="join">
+    <div class="join">
+      <h2>Join Our Global Movement</h2>
+      <p>Be part of transformative initiatives that use arts and culture to build bridges, preserve heritage, and create lasting peace across borders.</p>
+      <div class="join-btns">
+        <button class="btn btn-primary">Get Involved</button>
+        <button class="btn btn-ghost">Learn More</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Made-with badge -->
+  <div class="made">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="#f4efe6"><path d="M12 2c1 3 3 4 5 4-2 1-3 3-3 5 3-1 5 0 6 2-2 0-4 2-4 5-1-3-3-4-5-4 2-1 3-3 3-5-3 1-5 0-6-2 2 0 4-2 4-5z"/></svg>
+    Made with Manus
+  </div>
+
+  <script>
+/* =====================================================================
+   issNOW.earth — Programs data + client-side search
+   ---------------------------------------------------------------------
+   TO EDIT A CARD:  change its entry in the ARTICLES array below.
+   TO ADD A CARD:   copy an entry, give it a new id, pick a theme.
+   theme: "teal" | "lime" | "grad"      border: true/false (green edge)
+   ===================================================================== */
+
+/* Shared SVGs (white stroke, used inside the cards) */
+const ICONS = {
+  book:  `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2H2z"/><path d="M22 4h-6a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2H22z"/></svg>`,
+  doc:   `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="1"/><path d="M7 21h10"/><path d="M10 7h4M10 10h4M10 13h4"/></svg>`,
+  globe: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg>`,
+  heart: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>`
+};
+const ARROW = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+
+/* ------------------------- ARTICLE DATA ------------------------- */
+const ARTICLES = [
+  {
+    id: "youth-storytelling",
+    title: "Global Youth Storytelling Archive",
+    description: "Digital platform preserving stories from young people worldwide",
+    tags: ["Multimedia story submissions", "Interactive global map", "SDG-aligned themes", "Youth voice amplification"],
+    fracBig: "45K", fracSub: "of 1.0M stories", progress: 4.5,
+    icon: "book", theme: "teal", border: true,
+    url: "#"
+  },
+  {
+    id: "ai-heritage",
+    title: "AI-Powered Cultural Heritage Platform",
+    description: "Using AI to document and share cultural heritage practices",
+    tags: ["AI-assisted documentation", "Rich media galleries", "Cultural practice discovery", "Heritage preservation"],
+    fracBig: "1K", fracSub: "of 10K practices", progress: 12.5,
+    icon: "doc", theme: "lime", border: false,
+    url: "#"
+  },
+  {
+    id: "sibling-city",
+    title: "International Sibling City Arts Exchange",
+    description: "Pairing cities worldwide for cultural exchange through arts",
+    tags: ["City pairing system", "Exchange program management", "Success story showcase", "Global arts network"],
+    fracBig: "127", fracSub: "of 500 city pairs", progress: 25.4,
+    icon: "globe", theme: "grad", border: true,
+    url: "#"
+  },
+  {
+    id: "peace-museums",
+    title: "Virtual Peace Museums Network",
+    description: "Virtual museums dedicated to peace-building and cultural understanding",
+    tags: ["Virtual museum tours", "Peace-building exhibitions", "Educational resources", "Global accessibility"],
+    fracBig: "2.4M", fracSub: "of 150M visitors/year", progress: 24.0,
+    icon: "heart", theme: "teal", border: false,
+    url: "#"
+  }
+];
+
+/* ------------------------- SEARCH / RANKING ------------------------- */
+/* Normalize: lowercase + strip accents so "cafe" matches "café". */
+function norm(s) {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+/* Score each article across fields (title > tags > description),
+   drop zero-score items, sort best-first. */
+function searchArticles(query, articles) {
+  const terms = norm(query).trim().split(/\s+/).filter(Boolean);
+  if (!terms.length) return articles.slice();
+
+  return articles
+    .map(a => {
+      const title = norm(a.title);
+      const tags  = norm(a.tags.join(" "));
+      const desc  = norm(a.description);
+      let score = 0;
+      for (const t of terms) {
+        if (title.includes(t)) score += 3;
+        if (tags.includes(t))  score += 2;
+        if (desc.includes(t))  score += 1;
+      }
+      return { a, score };
+    })
+    .filter(r => r.score > 0)
+    .sort((x, y) => y.score - x.score)
+    .map(r => r.a);
+}
+
+/* ------------------------- RENDERING ------------------------- */
+function escapeHTML(s) {
+  return s.replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+}
+
+/* Wrap the matched query terms in <mark> so users see why a card surfaced. */
+function highlight(text, terms) {
+  let out = escapeHTML(text);
+  for (const t of terms) {
+    if (!t) continue;
+    const re = new RegExp("(" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+    out = out.replace(re, "<mark>$1</mark>");
+  }
+  return out;
+}
+
+function cardHTML(a, terms) {
+  const features = a.tags.map(t => `<li>${highlight(t, terms)}</li>`).join("");
+  return `
+    <article class="card theme-${a.theme}${a.border ? " bordered" : ""}">
+      <div class="card-top">
+        <div class="icon-box">${ICONS[a.icon] || ""}</div>
+        <div class="frac"><div class="big">${escapeHTML(a.fracBig)}</div><div class="sub">${escapeHTML(a.fracSub)}</div></div>
+      </div>
+      <h3>${highlight(a.title, terms)}</h3>
+      <p class="desc">${highlight(a.description, terms)}</p>
+      <div class="prog-row"><span>Progress to 2030</span><b>${a.progress}%</b></div>
+      <div class="track"><div class="fill" style="width:${a.progress}%"></div></div>
+      <ul class="feat">${features}</ul>
+      <a class="btn-explore" href="${a.url}">Explore Program ${ARROW}</a>
+    </article>`;
+}
+
+/* ------------------------- WIRE UP ------------------------- */
+const input    = document.getElementById("article-search");
+const clearBtn = document.getElementById("search-clear");
+const resultsEl = document.getElementById("results");
+const emptyEl   = document.getElementById("empty");
+const countEl   = document.getElementById("search-count");
+
+function run(query) {
+  const terms = norm(query).trim().split(/\s+/).filter(Boolean);
+  const list = searchArticles(query, ARTICLES);
+
+  resultsEl.innerHTML = list.map(a => cardHTML(a, terms)).join("");
+  emptyEl.hidden = list.length !== 0;
+  clearBtn.hidden = query.length === 0;
+
+  // Announce result count only while searching.
+  countEl.textContent = query.trim()
+    ? `${list.length} ${list.length === 1 ? "program" : "programs"} found`
+    : "";
+}
+
+let timer;
+input.addEventListener("input", e => {
+  clearTimeout(timer);
+  timer = setTimeout(() => run(e.target.value), 150); // debounce
+});
+clearBtn.addEventListener("click", () => {
+  input.value = "";
+  input.focus();
+  run("");
+});
+
+run(""); // initial: show all programs
+
+  </script>
+</body>
+</html>
