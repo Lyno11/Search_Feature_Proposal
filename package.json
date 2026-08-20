@@ -1,0 +1,10 @@
+{
+  "name": "issnow-virtual-museum-replica",
+  "version": "1.0.0",
+  "description": "issNOW.earth — Innovation Beyond SDGs page with client-side program search.",
+  "private": true,
+  "scripts": {
+    "test": "node app.test.js"
+  },
+  "license": "UNLICENSED"
+}

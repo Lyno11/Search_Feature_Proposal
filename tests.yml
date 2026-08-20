@@ -22,6 +22,6 @@ jobs:
       # app.test.js has no dependencies, so there is nothing to install.
       # It exits with code 1 if any assertion fails, which fails the job.
       - name: Run tests
-        run: node app.test.js
+        run: npm test
         # If app.js / app.test.js live in a subfolder of the repo, set it here:
         # working-directory: path/to/folder
