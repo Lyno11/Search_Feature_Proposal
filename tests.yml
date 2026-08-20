@@ -3,7 +3,7 @@ name: tests
 # Run the search/render test suite on every push and pull request.
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, feature ]
   pull_request:
 
 jobs:
