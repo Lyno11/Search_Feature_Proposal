@@ -29,7 +29,7 @@ From this research I scoped a feature that fits this page: a **client-side** sea
 ---
 
 ## Step 3 — User flow and logic
-User Story--> As a User I want  to logon the site, and search for my Article. Success Criteria--> Retrieving the relevant Article from the search.
+User Story--> As a User I want  to logon the site, and search for my Program. Success Criteria--> Retrieving the relevant Program from the search.
 
 I mapped the logic step by step and accounted for the edge cases before writing code.
 **Happy path**
