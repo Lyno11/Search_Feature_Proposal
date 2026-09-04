@@ -10,7 +10,7 @@ This README walks through how the feature was designed, from problem to shipped 
 
 When a page holds many articles (programs, stories, heritage practices, museum exhibits), finding the *one* you want by scrolling is slow and frustrating. The more content the platform adds, the worse this gets. A search feature solves it: the reader types what they're looking for and the matching item surfaces immediately.
 
-**Definition of success:** the search feature helps a user find the right article faster than scrolling — a relevant query returns the correct program at the top of the results, and an irrelevant query clearly shows nothing matched.
+**Definition of success:** the search feature helps a user find the right program faster than scrolling — a relevant query returns the correct program at the top of the results, and an irrelevant query clearly shows nothing matched.
 
 ---
 
